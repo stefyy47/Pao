@@ -1,6 +1,12 @@
 package proiect;
 
-public class Person {
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Person implements ReadService{
     protected String first_name;
     protected String last_name;
     protected int age;
@@ -35,6 +41,27 @@ public class Person {
         return age;
     }
 
+    public void setRecords(List<List<String>> records ){
+        records = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new File("book.csv"));) {
+            while (scanner.hasNextLine()) {
+                records.add(getRecordsHelper(scanner.nextLine()));
+            }
+        }
+        catch(IOException e){
+            System.out.println("Nu am reusit");
+        }
+    }
+    public List<String> getRecordsHelper(String line){
+        List<String> values = new ArrayList<String>();
+        try (Scanner rowScanner = new Scanner(line)) {
+            rowScanner.useDelimiter(",");
+            while (rowScanner.hasNext()) {
+                values.add(rowScanner.next());
+            }
+        }
+        return values;
+    }
     @Override
     public String toString() {
         return (first_name + last_name + " with age " + age + '.');

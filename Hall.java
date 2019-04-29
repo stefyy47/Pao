@@ -1,9 +1,10 @@
 package proiect;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
-public class Hall extends Show implements Comparable<Hall> {
+public class Hall extends Show implements Comparable<Hall>, ReadService {
     int id;
     int number_places;
     boolean full;
@@ -60,6 +61,27 @@ public class Hall extends Show implements Comparable<Hall> {
         super.endingHour = endingHour;
         super.setPrice(price);
         super.minimumAge = minAge;
+    }
+    public void setRecords(List<List<String>> records ){
+        records = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new File("book.csv"));) {
+            while (scanner.hasNextLine()) {
+                records.add(getRecordsHelper(scanner.nextLine()));
+            }
+        }
+        catch(IOException e){
+            System.out.println("Nu am reusit");
+        }
+    }
+    public List<String> getRecordsHelper(String line){
+        List<String> values = new ArrayList<String>();
+        try (Scanner rowScanner = new Scanner(line)) {
+            rowScanner.useDelimiter(",");
+            while (rowScanner.hasNext()) {
+                values.add(rowScanner.next());
+            }
+        }
+        return values;
     }
     @Override
     public String toString() {
